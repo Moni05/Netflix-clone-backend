@@ -17,6 +17,4 @@ app.use("/users", userRouter);
 app.use("/lists", listRouter);
 app.use("/movies", movieRouter);
 
-app.listen(3001,()=> {
-    console.log("Backend server is running");
-})
+app.listen(process.env.PORT || 3001,()=>console.log("server running at port 3001"));
