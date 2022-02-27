@@ -12,6 +12,10 @@ const movieRouter = require("./routes/movie");
 
 const db = require("./mongoose");
 
+app.get("/", (req, res) =>{
+    res.send("API is running");
+})
+
 app.use("/auth", authRouter);
 app.use("/users", userRouter);
 app.use("/lists", listRouter);
