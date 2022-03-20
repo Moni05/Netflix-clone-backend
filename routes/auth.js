@@ -28,12 +28,14 @@ router.post("/login", async (req, res) =>{
 
         const user = await User.findOne({ email: req.body.email });
 
-        !user && res.status(401).send("Email or Password is incorrect");
+        //!user && res.status(401).json("Email or Password is incorrect");
+
+        if(!user) return res.status(401).json("Email or Password is incorrect");
 
         const keys = CryptoJS.AES.decrypt(user.password, process.env.SECRET_KEY);
         const originalPassword = keys.toString(CryptoJS.enc.Utf8);
 
-        originalPassword !== req.body.password && res.status(401).send("Email or Password is incorrect");
+        if(originalPassword !== req.body.password) return res.status(401).json("Email or Password is incorrect");
 
         const accessToken = jwt.sign(
             { id: user._id, isAdmin: user.isAdmin }, process.env.SECRET_TOKEN, { expiresIn: "1d" },
@@ -41,10 +43,10 @@ router.post("/login", async (req, res) =>{
 
         const { password, ...userInfo } = user._doc;
 
-        res.status(200).send({ ...userInfo, accessToken });
+        res.status(200).json({ ...userInfo, accessToken });
     }
     catch(err){
-        res.status(500).send(err);
+        res.status(500).json(err);
     }
 })
 
