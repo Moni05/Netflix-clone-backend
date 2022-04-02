@@ -15,10 +15,16 @@ router.post("/register", async (req, res) =>{
 
     try{
         const user = await newUser.save();
-        res.status(200).send(user);
+        res.json("User created");
     }
     catch(err){
-        res.status(500).send(err);
+        console.log(err);
+        
+        let message = "Unable to create new user at the moment, Please try again or contact administrator!";
+        if (err.message.includes("duplicate key error collection")) {
+            message = `User with the same mail or username already exist or the email is invalid`;
+        }
+        res.json(message);
     }
 })
 
